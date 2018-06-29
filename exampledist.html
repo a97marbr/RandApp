@@ -1,0 +1,95 @@
+<html>
+<head>
+ 
+ </head>
+ <body>
+     <script src="randapp.js"></script> 
+     <h2>Uniform distribution</h2>
+     <canvas id="canv" height="300px" width="600px" style="border:1px solid red"></canvas>
+     <h2>Normal (Gaussian) distribution</h2>
+     <canvas id="canv2" height="300px" width="600px" style="border:1px solid red"></canvas>
+     <h2>Chi-squared distribution with k=1</h2>
+     <canvas id="canv3" height="300px" width="600px" style="border:1px solid red"></canvas>
+     <h2>Uniform squared distribution</h2>
+     <canvas id="canv4" height="300px" width="600px" style="border:1px solid red"></canvas>
+     <script>      
+         var canvas1=document.getElementById("canv");
+         var context1=canvas1.getContext("2d");
+         var canvas2=document.getElementById("canv2");
+         var context2=canvas2.getContext("2d");
+         var canvas3=document.getElementById("canv3");
+         var context3=canvas3.getContext("2d");
+         var canvas4=document.getElementById("canv4");
+         var context4=canvas4.getContext("2d");
+         var seed=Math.floor(new Date() / 1000);
+         var uni_rnd=new RandApp({"seed":seed,"distribution":"uniform"});
+         var std_rnd=new RandApp({"seed":seed,"distribution":"normal"});
+         var chi_rnd=new RandApp({"seed":seed,"distribution":"chi-squared"});
+         var unisqr_rnd=new RandApp({"seed":seed,"distribution":"uni-squared"});
+         let y=0;
+         draw();
+         function draw(){
+            for(let x=0;x<600;x++){
+                let r_uni=uni_rnd.rand();
+                let r_std=std_rnd.rand();
+                let r_chi=chi_rnd.rand();
+                let r_unisqr=unisqr_rnd.rand();
+                context1.fillRect(x,r_uni*300,1,1);
+                context2.fillRect(x,r_std*300,1,1);
+                context3.fillRect(x,r_chi*300,1,1);
+                context4.fillRect(x,r_unisqr*300,1,1);
+             }
+             y++;
+             if(y<300){
+                 requestAnimationFrame(draw);
+             }
+         }
+      </script>
+      <h2>Uniform distribution</h2>
+      <canvas id="canv5" height="300px" width="600px" style="border:1px solid red;"></canvas>
+      <h2>Normal (Gaussian) distribution</h2>
+      <canvas id="canv6" height="300px" width="600px" style="border:1px solid red"></canvas>
+      <h2>Chi-squared distribution with k=1</h2>
+      <canvas id="canv7" height="300px" width="600px" style="border:1px solid red"></canvas>
+      <h2>Uniform squared distribution</h2>
+      <canvas id="canv8" height="300px" width="600px" style="border:1px solid red"></canvas>
+      <script> 
+          var canvas5=document.getElementById("canv5");
+          var context5=canvas5.getContext("2d");
+          var canvas6=document.getElementById("canv6");
+          var context6=canvas6.getContext("2d");
+          var canvas7=document.getElementById("canv7");
+          var context7=canvas7.getContext("2d");
+          var canvas8=document.getElementById("canv8");
+          var context8=canvas8.getContext("2d");
+          var seed=Math.floor(new Date() / 1000);
+          var uni_rnd=new RandApp({"seed":seed,"distribution":"uniform"});
+          var std_rnd=new RandApp({"seed":seed,"distribution":"normal"});
+          var chi_rnd=new RandApp({"seed":seed,"distribution":"chi-squared"});
+          var unisqr_rnd=new RandApp({"seed":seed,"distribution":"uni-squared"});
+          let len=600;
+          let yMax=300;
+          for(let n=0;n<100;n++){
+              y1=new Array(len).fill(0);
+              y2=new Array(len).fill(0);
+              y3=new Array(len).fill(0);
+              y4=new Array(len).fill(0);
+              for(let j=0;j<50000;j++){
+                  let r_uni=uni_rnd.randIntFromIntervall(0,600);
+                  let r_std=std_rnd.randIntFromIntervall(0,600);
+                  let r_chi=chi_rnd.randIntFromIntervall(0,600);
+                  let r_unisqr=unisqr_rnd.randIntFromIntervall(0,600);
+                  y1[r_uni]++;
+                  y2[r_std]++;
+                  y3[r_chi]++;                
+                  y4[r_unisqr]++;                
+              }
+              for(let x=0;x<600;x++){
+                  context5.fillRect(x,yMax-y1[x],1,1);
+                  context6.fillRect(x,yMax-y2[x],1,1);
+                  context7.fillRect(x,yMax-y3[x],1,1);
+                  context8.fillRect(x,yMax-y4[x],1,1);
+              }
+          }
+     </script>
+ </body>
