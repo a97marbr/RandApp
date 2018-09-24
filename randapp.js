@@ -3,16 +3,48 @@
 * RandApp, a simple psudo random number (PNG) library supporting 3 different 
 *          distributions: uniform, normal (gaussian), chi-squared
 */
+var RandAppCount = 0;
 function RandApp(params) {    
+    this.id=RandAppCount++;
     if(typeof params === "undefined"){
         params={};
     }
-    
+
+    if(typeof params.persistentSeed === "undefined"){
+        params.persistentSeed=true;
+    }
+    var persistentSeed = params.persistentSeed;    
+
     if(typeof params.seed === "undefined"){
         params.seed=Math.floor(new Date() / 1000);
     }
-    var seed = params.seed;
-    
+    var seed=null;
+    if(persistentSeed){
+        seed = params.seed;
+    }else{
+        seed=parseInt(window.localStorage.getItem("RandAppSeed"+this.id));
+        if(seed!==parseInt(seed,10)){
+            seed = params.seed;
+        }else{
+            seed++;
+        }
+    }
+    window.localStorage.setItem("RandAppSeed"+this.id,seed);
+
+/*
+    var seed=parseInt(window.localStorage.getItem("RandAppSeed"));
+    if(typeof params.seed === "undefined"){
+        params.seed=Math.floor(new Date() / 1000);
+    }
+    console.log("LS",seed);
+    console.log("PARAM",params.seed);
+    if(seed===params.seed){
+        seed+=1;
+    }else{
+        seed = params.seed;
+    }
+    window.localStorage.setItem("RandAppSeed",seed);
+  */  
     if(typeof params.distribution === "undefined"){
         params.distribution="uniform";
     }
@@ -21,7 +53,7 @@ function RandApp(params) {
     if(typeof params.k === "undefined"){
         params.k=1;
     }
-    var k = params.k;
+    var k = params.k;    
 
     // Linear Congruential generator
     // Using paramters from Numerical Recepies (see Wikipedia)
@@ -72,5 +104,24 @@ function RandApp(params) {
     
     this.randIntFromIntervall=function(min,max){
         return Math.floor(this.rand() * (max - min)) + min;
+    }
+
+    this.clearSeed=function(){
+        window.localStorage.removeItem("RandAppSeed"+this.id);
+        console.log("SEED CLEARED");
+    }
+
+    this.seed=function(s){
+        if(s === parseInt(s,10)){
+            window.localStorage.setItem("RandAppSeed"+this.id,s);
+            console.log("SEED SET", s);
+        }
+
+        var seed=parseInt(window.localStorage.getItem("RandAppSeed"+this.id));
+        if(seed===parseInt(seed,10)){
+            return seed;
+        }else{
+            return false;
+        }
     }
 }

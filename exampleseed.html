@@ -1,0 +1,45 @@
+<!DOCTYPE html!>
+<html>
+<head>
+    <script src="randapp.js"></script>  
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>iteration <span id="iterations"></span>/5</h2>
+    <h2>With user provided seed (uni_rnd1 uses 1337 as starting seed, non-persistent)</h2>
+    <pre id="with1"></pre>
+    <h2>With user provided seed (uni_rnd2 uses 0 as starting seed, persistent)</h2>
+    <pre id="with2"></pre>
+    <h2>Without user provided seed (uni_rnd3)</h2>
+    <pre id="without"></pre>
+    <script>      
+        var seed1=1337;
+        var seed2=0;
+        var uni_rnd1=new RandApp({"seed":seed1,"distribution":"uniform","persistentSeed":false});
+        var uni_rnd2=new RandApp({"seed":seed2,"distribution":"uniform","persistentSeed":true});
+        var uni_rnd3=new RandApp({"distribution":"uniform"});
+        for(let i=0;i<10;i++){
+            document.getElementById("with1").innerHTML+=i+" "+uni_rnd1.seed()+" "+uni_rnd1.rand()+"<BR>";
+            document.getElementById("with2").innerHTML+=i+" "+uni_rnd2.seed()+" "+uni_rnd2.rand()+"<BR>";
+            document.getElementById("without").innerHTML+=i+" "+uni_rnd3.seed()+" "+uni_rnd3.rand()+"<BR>";
+        }
+        var iterations=parseInt(window.localStorage.getItem("RandAppTestApp"),10);
+        if(iterations!==parseInt(iterations,10)){
+            iterations=1;
+        }else{
+            iterations++;
+        }
+        document.getElementById("iterations").innerHTML=iterations;
+        alert(iterations);
+
+        if(iterations<5){
+            window.localStorage.setItem("RandAppTestApp",iterations);
+            location.reload();
+        }else{
+            window.localStorage.removeItem("RandAppTestApp");
+            uni_rnd1.clearSeed();
+            uni_rnd2.clearSeed();
+            uni_rnd3.clearSeed();
+        }
+    </script>
+</body>
