@@ -31,20 +31,6 @@ function RandApp(params) {
     }
     window.localStorage.setItem("RandAppSeed"+this.id,seed);
 
-/*
-    var seed=parseInt(window.localStorage.getItem("RandAppSeed"));
-    if(typeof params.seed === "undefined"){
-        params.seed=Math.floor(new Date() / 1000);
-    }
-    console.log("LS",seed);
-    console.log("PARAM",params.seed);
-    if(seed===params.seed){
-        seed+=1;
-    }else{
-        seed = params.seed;
-    }
-    window.localStorage.setItem("RandAppSeed",seed);
-  */  
     if(typeof params.distribution === "undefined"){
         params.distribution="uniform";
     }
