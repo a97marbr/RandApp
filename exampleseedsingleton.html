@@ -1,0 +1,74 @@
+<!DOCTYPE html!>
+<html>
+<head>
+    <script src="randappsingleton.js"></script>  
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Page reload <span id="iterations"></span>/5</h2>
+    <h2>With user provided seed 1337 as starting seed at iteration 1, current seed is persistant between page loads until RandApp.clear() is run.</h2>
+    <table>
+      <thead>
+        <tr><th>i</th><th>Seed</th><th>Distribution</th><th>rand()</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <h3>An array of int from interval 1-100</h3>
+    <pre id="with1"></pre>
+    <h2>Distribution graph</h2>
+    <canvas id="canv" height="300px" width="600px" style="border:1px solid red"></canvas>
+
+    <script>
+        var canvas1=document.getElementById("canv");
+        var context1=canvas1.getContext("2d");
+        var iterations=parseInt(window.localStorage.getItem("RandAppTestApp"),10);
+        if(iterations!==parseInt(iterations,10)){
+            iterations=1;
+            RandApp.seed(1337);
+            RandApp.distribution("normal");
+        }else{
+            iterations++;
+        }
+
+        var str="";
+        for(let i=0;i<10;i++){
+            str+="<tr>"
+            str+="<td>"+i+"</td><td>"+RandApp.seed()+"</td><td>"+RandApp.distribution()+"</td><td>"+RandApp.rand()+"</td><td>";
+            str+="</tr>"
+        }
+        document.getElementById("tbody").innerHTML=str;
+
+        let arr=[];
+        for(let j=0;j<100;j++){
+            arr[j]=RandApp.randIntFromInterval(1,100);
+        }
+        document.getElementById("with1").innerHTML+=JSON.stringify(arr)+"<BR>";
+
+        document.getElementById("iterations").innerHTML=iterations;
+        var y=0;
+        var animation;
+        draw();
+
+        function draw(){
+            for(let x=0;x<600;x++){
+                context1.fillRect(x,RandApp.rand()*300,1,1);
+            }
+            y++;
+            if(y<10){
+                animation=requestAnimationFrame(draw);
+            }else{
+                cancelAnimationFrame(animation);
+                alert(iterations);
+                if(iterations<5){
+                    window.localStorage.setItem("RandAppTestApp",iterations);
+                    cancelAnimationFrame(animation);
+                    location.reload();
+                }else{
+                    window.localStorage.removeItem("RandAppTestApp");
+                    RandApp.clear();
+                    cancelAnimationFrame(animation);
+                }
+            }
+        }        
+    </script>
+</body>
